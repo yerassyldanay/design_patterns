@@ -1,0 +1,5 @@
+# go.uber.org/dig v1.12.0
+## explicit
+go.uber.org/dig
+go.uber.org/dig/internal/digreflect
+go.uber.org/dig/internal/dot
