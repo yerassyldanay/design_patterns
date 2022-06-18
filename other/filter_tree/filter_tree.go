@@ -61,7 +61,7 @@ func (m MustHaveToy) Is(p []Person) []Person {
 
 // AndStatement checks whether both statements are true
 type AndStatement struct {
-	FirstFilter PersonFilter
+	FirstFilter  PersonFilter
 	SecondFilter PersonFilter
 }
 
@@ -90,7 +90,7 @@ func (a *AndStatement) Is(p []Person) []Person {
 
 // OrStatement enables to put two conditions, where one is true
 type OrStatement struct {
-	FirstFilter PersonFilter
+	FirstFilter  PersonFilter
 	SecondFilter PersonFilter
 }
 
@@ -106,7 +106,7 @@ func (o *OrStatement) Is(p []Person) []Person {
 	// inside the list
 	for i := range firsList {
 		result = append(result, firsList[i])
-		firstListMap[ firsList[i].Id ] = &firsList[ i ]
+		firstListMap[firsList[i].Id] = &firsList[i]
 	}
 
 	// after filtering with the second filter
