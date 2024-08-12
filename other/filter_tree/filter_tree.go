@@ -15,47 +15,63 @@ type Filter interface {
 	Is(p *Person) *Person
 }
 
-type MustBeAdult struct{}
+type mustBeAdult struct{}
 
-func (f MustBeAdult) Is(p *Person) *Person {
+func (f mustBeAdult) Is(p *Person) *Person {
 	if p == nil || p.Age < 18 {
 		return nil
 	}
 	return p
 }
 
-type MustBeChild struct{}
+func MustBeAdult() mustBeAdult {
+	return mustBeAdult{}
+}
 
-func (f MustBeChild) Is(p *Person) *Person {
+type mustBeChild struct{}
+
+func (f mustBeChild) Is(p *Person) *Person {
 	if p == nil || p.Age >= 18 {
 		return nil
 	}
 	return p
 }
 
-type MustRideCar struct{}
+func MustBeChild() mustBeChild {
+	return mustBeChild{}
+}
 
-func (f MustRideCar) Is(p *Person) *Person {
+type mustRideCar struct{}
+
+func (f mustRideCar) Is(p *Person) *Person {
 	if p == nil || !p.RidesCar {
 		return nil
 	}
 	return p
 }
 
-type MustHaveToy struct{}
+func MustRideCar() mustRideCar {
+	return mustRideCar{}
+}
 
-func (f MustHaveToy) Is(p *Person) *Person {
+type mustHaveToy struct{}
+
+func (f mustHaveToy) Is(p *Person) *Person {
 	if p == nil || !p.HasToy {
 		return nil
 	}
 	return p
 }
 
-type AndStatement struct {
+func MustHaveToy() mustHaveToy {
+	return mustHaveToy{}
+}
+
+type and struct {
 	filters []Filter
 }
 
-func (f AndStatement) Is(p *Person) *Person {
+func (f and) Is(p *Person) *Person {
 	if p == nil {
 		return nil
 	}
@@ -69,14 +85,14 @@ func (f AndStatement) Is(p *Person) *Person {
 }
 
 func And(filters ...Filter) Filter {
-	return AndStatement{filters: filters}
+	return and{filters: filters}
 }
 
-type OrStatement struct {
+type or struct {
 	filters []Filter
 }
 
-func (f OrStatement) Is(p *Person) *Person {
+func (f or) Is(p *Person) *Person {
 	if p == nil {
 		return nil
 	}
@@ -90,14 +106,14 @@ func (f OrStatement) Is(p *Person) *Person {
 }
 
 func Or(filters ...Filter) Filter {
-	return OrStatement{filters: filters}
+	return or{filters: filters}
 }
 
 func main() {
 	// filtering real people from fake ones
 	// to be a real person, person must meet following requirements
 	// (adult && car) || (child && toy)
-	newFilter := Or(And(MustBeAdult{}, MustRideCar{}), And(MustBeChild{}, MustHaveToy{}))
+	newFilter := Or(And(MustBeAdult(), MustRideCar()), And(MustBeChild(), MustHaveToy()))
 	for _, person := range People {
 		resp := newFilter.Is(&person)
 		if resp == nil {
